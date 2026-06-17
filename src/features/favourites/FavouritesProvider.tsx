@@ -1,24 +1,9 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { z } from "zod";
 import { playerSchema, type Player } from "../../api/schemas";
+import { FavouritesContext } from "./favouritesContext";
 
 const STORAGE_KEY = "nba-stats:favourite-players";
-
-interface FavouritesContextValue {
-  players: Player[];
-  isFavourite: (id: number) => boolean;
-  toggle: (player: Player) => void;
-}
-
-// `null` as the default sentinel lets the hook below detect "used outside a
-// provider" and throw, instead of every consumer having to handle undefined.
-const FavouritesContext = createContext<FavouritesContextValue | null>(null);
 
 // localStorage is untrusted input — validate it through the same schema we use
 // for API data. Anything stale or corrupt falls back to an empty list.
@@ -61,12 +46,4 @@ export function FavouritesProvider({ children }: { children: ReactNode }) {
       {children}
     </FavouritesContext.Provider>
   );
-}
-
-export function useFavourites(): FavouritesContextValue {
-  const context = useContext(FavouritesContext);
-  if (!context) {
-    throw new Error("useFavourites must be used within a FavouritesProvider");
-  }
-  return context;
 }

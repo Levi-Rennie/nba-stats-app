@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import './App.css'
+import styles from './App.module.css'
 import { BrowsePage } from './features/browse/BrowsePage'
 import { ComparePage } from './features/compare/ComparePage'
 import { TeamsPage } from './features/teams/TeamsPage'
@@ -29,10 +29,10 @@ function App() {
   }
 
   return (
-    <main>
-      <h1>NBA Stats</h1>
+    <main className={styles.app}>
+      <h1>🏀 NBA Stats</h1>
 
-      <nav>
+      <nav className={styles.nav}>
         {TABS.map((tab) => (
           <button
             key={tab.id}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Player } from "../api/schemas";
 import { usePlayers } from "../hooks/usePlayers";
+import styles from "./PlayerSearch.module.css";
 
 interface PlayerSearchProps {
   /** Current search text. Controlled by the parent so it can be preserved. */
@@ -32,6 +33,7 @@ export function PlayerSearch({
   return (
     <div>
       <form
+        className={styles.form}
         onSubmit={(event) => {
           event.preventDefault();
           setSubmittedQuery(query.trim());
@@ -49,9 +51,11 @@ export function PlayerSearch({
         </button>
       </form>
 
-      {state.status === "idle" && <p>Search for a player by name.</p>}
+      {state.status === "idle" && (
+        <p className={styles.hint}>Search for a player by name.</p>
+      )}
 
-      {state.status === "loading" && <p>Loading players…</p>}
+      {state.status === "loading" && <p className={styles.hint}>Loading players…</p>}
 
       {state.status === "error" && (
         <p role="alert">Couldn’t load players: {state.error.message}</p>
@@ -59,14 +63,18 @@ export function PlayerSearch({
 
       {state.status === "success" &&
         (state.data.length === 0 ? (
-          <p>
+          <p className={styles.hint}>
             No players found{submittedQuery ? ` for “${submittedQuery}”` : ""}.
           </p>
         ) : (
-          <ul>
+          <ul className={styles.list}>
             {state.data.map((player) => (
               <li key={player.id}>
-                <button type="button" onClick={() => onSelect(player)}>
+                <button
+                  type="button"
+                  className={styles.item}
+                  onClick={() => onSelect(player)}
+                >
                   {player.first_name} {player.last_name} — {player.team.full_name}
                   {player.position ? ` (${player.position})` : ""}
                 </button>

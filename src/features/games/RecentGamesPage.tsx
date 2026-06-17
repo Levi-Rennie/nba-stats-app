@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useGames } from "../../hooks/useGames";
+import styles from "./RecentGamesPage.module.css";
 
 const WINDOW_DAYS = 30;
 
@@ -23,7 +24,9 @@ export function RecentGamesPage() {
   const state = useGames(start, end);
 
   if (state.status === "idle") return null; // useGames is always enabled
-  if (state.status === "loading") return <p>Loading recent games…</p>;
+  if (state.status === "loading") {
+    return <p className={styles.hint}>Loading recent games…</p>;
+  }
   if (state.status === "error") {
     return <p role="alert">Couldn’t load games: {state.error.message}</p>;
   }
@@ -37,14 +40,17 @@ export function RecentGamesPage() {
     <div>
       <h2>Recent games</h2>
       {games.length === 0 ? (
-        <p>No games in the last {WINDOW_DAYS} days.</p>
+        <p className={styles.hint}>No games in the last {WINDOW_DAYS} days.</p>
       ) : (
-        <ul>
+        <ul className={styles.list}>
           {games.map((game) => (
-            <li key={game.id}>
-              {game.date}: {game.visitor_team.full_name} {game.visitor_team_score}{" "}
-              @ {game.home_team.full_name} {game.home_team_score}
-              {game.postseason ? " (Playoffs)" : ""}
+            <li key={game.id} className={styles.game}>
+              <span className={styles.date}>{game.date}</span>
+              <span className={styles.matchup}>
+                {game.visitor_team.full_name} {game.visitor_team_score} @{" "}
+                {game.home_team.full_name} {game.home_team_score}
+              </span>
+              {game.postseason && <span className={styles.playoff}>Playoffs</span>}
             </li>
           ))}
         </ul>

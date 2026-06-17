@@ -1,0 +1,48 @@
+.back {
+  margin-bottom: 1rem;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+/* Two-column grid: the Fragment-emitted <dt>/<dd> pairs flow into label | value. */
+.attrs {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.4rem 1.25rem;
+  margin: 0;
+}
+
+.attrs dt {
+  color: var(--text-muted);
+}
+
+.attrs dd {
+  margin: 0;
+}
+
+.favActive {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+
+.favActive:hover:not(:disabled) {
+  background: var(--accent);
+}

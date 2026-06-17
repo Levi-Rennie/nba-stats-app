@@ -1,0 +1,26 @@
+.form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.form input {
+  flex: 1;
+}
+
+.list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+/* Each result is a full-width, left-aligned button (inherits the global button
+   look: surface background, border, hover). */
+.item {
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+}
+
+.hint {
+  color: var(--text-muted);
+}

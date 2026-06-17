@@ -1,0 +1,27 @@
+.app {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 4rem;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Active tab — driven by the aria-current we already set for accessibility. */
+.nav button[aria-current="page"] {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .app {
+    padding: 1rem 0.75rem 3rem;
+  }
+}

@@ -26,12 +26,17 @@ export function useAsync<T>(
   );
 
   useEffect(() => {
-    if (!enabled) {
-      setState({ status: "idle" });
-      return;
-    }
+    // Disabled: don't fetch. We report `idle` from the return below rather than
+    // setState here, which would trigger a needless cascading render.
+    if (!enabled) return;
 
     let ignore = false;
+    // Transition to loading at the start of the fetch. This is the intended
+    // data-fetching pattern (and drives the loading UI / disabled Search button);
+    // it's a single state set, not a cascading render. The rule's blessed
+    // alternative is a fetch library/Suspense, which this project deliberately
+    // hand-rolls instead.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setState({ status: "loading" });
 
     fetcher()
@@ -56,5 +61,7 @@ export function useAsync<T>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...deps, enabled]);
 
-  return state;
+  // When disabled we present idle directly rather than storing it, so the effect
+  // never has to setState just to reset.
+  return enabled ? state : { status: "idle" };
 }
