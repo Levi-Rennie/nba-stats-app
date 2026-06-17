@@ -84,6 +84,7 @@ paywall hits **player stats**, not just standings:
 | `/stats` | ❌ 401 | Per-game player box scores — paywalled. |
 | `/season_averages` | ❌ 401 | Player averages — paywalled. |
 | `/standings` | ❌ 401 | Paywalled. |
+| `/players/active` | ❌ 401 | Paywalled — the only way the API flags active vs. retired players. |
 
 Consequences for v1 (Plan B — stay free):
 - **No free source of player performance stats** (`/stats` and `/season_averages`
@@ -91,6 +92,11 @@ Consequences for v1 (Plan B — stay free):
   only**, not stat lines. A full stats compare is parked as a paid-tier stretch.
 - **Standings is buildable for free** by aggregating `/games` results into W–L
   records per team — this becomes a real feature, not a fallback.
+- **No active/retired indicator.** The player object carries no `active` field,
+  and `/players/active` (the API's only activity signal) is paywalled. Team
+  presence doesn't help — retired players still carry a last team — so there's
+  no reliable free way to show active vs. retired. Left out of v1; would need a
+  paid tier.
 
 ## 8. Success criteria
 
