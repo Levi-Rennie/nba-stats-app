@@ -19,18 +19,19 @@ export type Team = z.infer<typeof teamSchema>;
  * A player from `/players`. Free-tier fields only (bio/measurables) — there are
  * no performance stats here; those live behind the paywalled `/stats` endpoint.
  *
- * Nullability is taken from the live API (confirmed by probe): the draft fields
- * are null for undrafted players, and college/country can be absent for
- * international players. Everything `.nullable()` is a deliberate, observed case.
+ * Nullability is taken from the live API: only id and name are guaranteed. Every
+ * other bio field can be null for sparsely-documented players (e.g. "Luka
+ * Mitrovic" has null height/weight/jersey), and the draft fields are null for
+ * undrafted players. Each `.nullable()` reflects a value the API actually returns.
  */
 export const playerSchema = z.object({
   id: z.number(),
   first_name: z.string(),
   last_name: z.string(),
-  position: z.string(), // can be "" — still a string
-  height: z.string(),
-  weight: z.string(),
-  jersey_number: z.string(),
+  position: z.string().nullable(),
+  height: z.string().nullable(),
+  weight: z.string().nullable(),
+  jersey_number: z.string().nullable(),
   college: z.string().nullable(),
   country: z.string().nullable(),
   draft_year: z.number().nullable(),

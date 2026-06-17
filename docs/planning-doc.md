@@ -13,7 +13,7 @@
 |-------|--------|-----|
 | Framework | React + Vite + TypeScript | Fast dev server, simple setup, good for learning. |
 | Language | TypeScript (strict) | Course focus; no `any`. |
-| Data fetching | `fetch` + TanStack Query *(optional)* | Native fetch is enough; TanStack Query adds caching/loading/error handling if you want to learn it. |
+| Data fetching | `fetch` + a small in-memory cache | Native fetch behind `apiFetch`; a per-path `Map` cache de-dupes requests and survives tab switches. TanStack Query remains an optional future swap. |
 | Validation | Zod | Validate API responses, derive types with `z.infer`. Matches what's being learned. |
 | Styling | Your choice (CSS Modules / Tailwind) | Not the focus — pick whatever's quickest. |
 | State | React state + Context | No need for Redux at this scope. Favourites can live in Context. |
@@ -35,7 +35,7 @@ src/
     compare/        # head-to-head view
     teams/          # team / standings view
     favourites/     # favourites list + context
-  hooks/        # useDebounce, usePlayers, etc.
+  hooks/        # usePlayers (idle/loading/error/success state), etc.
   App.tsx
   main.tsx
 ```
@@ -116,7 +116,10 @@ const API_KEY = import.meta.env.VITE_BDL_API_KEY;
 - Fetch and `console.log` a list of players. **Goal: real data on screen.**
 
 ### Phase 2 — Browse + search (days 3–5)
-- Search bar with debounced input → players endpoint.
+- Search bar → players endpoint. **Submit-based** (Enter / Search button), not
+  debounced-on-keystroke: the free tier is rate-limited, so we fetch once per
+  explicit search rather than per character. (Originally planned as debounced
+  input; `useDebounce` was dropped.)
 - Player profile view (bio/measurables — no stats on the free tier).
 - Zod schemas for everything touched so far; no `any`.
 - Loading + error UI.
@@ -148,7 +151,7 @@ const API_KEY = import.meta.env.VITE_BDL_API_KEY;
 | Risk | Mitigation |
 |------|------------|
 | Standings/advanced stats are paywalled | **Confirmed paywalled (2026-06-17).** Standings derived from free `/games`; player stats dropped to paid-tier stretch (Plan B). |
-| Rate limits hit during dev | Cache responses (TanStack Query or a simple in-memory map); don't refetch on every keystroke (debounce). |
+| Rate limits hit during dev | **Done:** submit-based search (not per-keystroke), a per-path in-memory `Map` cache that de-dupes requests, and both views kept mounted so tab switches don't refetch. |
 | API shape differs from assumptions | Zod `safeParse` catches it early and loudly. |
 | Scope creep | Stick to the four core features; park extras in "out of scope". |
 
