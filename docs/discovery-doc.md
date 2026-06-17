@@ -46,7 +46,8 @@ showcase of front-end skills.
 |---------|-------------|
 | Browse players | Search for a player, view their profile (bio/measurables — see free-tier note). |
 | Compare players head-to-head | Pick two players, compare bio/measurables side by side (stats are paywalled — see note). |
-| Teams + derived standings | View team info; derive a W–L standings table from the free `/games` endpoint. |
+| Teams | View team info, grouped by conference and division. |
+| Recent games | List recent final scores from the free `/games` endpoint. |
 | Search + favourites | Search players/teams; mark favourites to revisit quickly. |
 
 ## 6. Out of scope (v1)
@@ -90,8 +91,15 @@ Consequences for v1 (Plan B — stay free):
 - **No free source of player performance stats** (`/stats` and `/season_averages`
   are both gated). Player profile and compare are therefore **bio/measurables
   only**, not stat lines. A full stats compare is parked as a paid-tier stretch.
-- **Standings is buildable for free** by aggregating `/games` results into W–L
-  records per team — this becomes a real feature, not a fallback.
+- **Standings is NOT viable on the free tier after all.** Deriving W–L records
+  needs every game of a season (~1,230 games = ~13 paginated requests at the
+  max `per_page` of 100), but the rate limit is **5 requests/minute**
+  (`x-ratelimit-limit: 5`). That's ~3 minutes of throttled fetching per load and
+  constant 429s. **Decision (2026-06-17): standings dropped to a stretch goal**
+  (needs the paid tier's `/standings` + higher limits, or a backend).
+- **Recent games is the free `/games` feature instead.** A narrow recent date
+  window returns the latest final scores in a single request — honest, cheap,
+  and useful.
 - **No active/retired indicator.** The player object carries no `active` field,
   and `/players/active` (the API's only activity signal) is paywalled. Team
   presence doesn't help — retired players still carry a last team — so there's

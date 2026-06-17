@@ -15,6 +15,12 @@ export const teamSchema = z.object({
 });
 export type Team = z.infer<typeof teamSchema>;
 
+/** The /teams list response — just a data array, no pagination meta. */
+export const teamsResponseSchema = z.object({
+  data: z.array(teamSchema),
+});
+export type TeamsResponse = z.infer<typeof teamsResponseSchema>;
+
 /**
  * A player from `/players`. Free-tier fields only (bio/measurables) — there are
  * no performance stats here; those live behind the paywalled `/stats` endpoint.
@@ -54,3 +60,29 @@ export const playersResponseSchema = z.object({
   meta: metaSchema,
 });
 export type PlayersResponse = z.infer<typeof playersResponseSchema>;
+
+/**
+ * A game from `/games`. We model only the fields the Recent Games view needs —
+ * Zod strips unknown keys by default, so the many per-quarter/timeout fields the
+ * API also returns are simply ignored. Scores are always numbers (confirmed by
+ * probe); the nested teams reuse teamSchema.
+ */
+export const gameSchema = z.object({
+  id: z.number(),
+  date: z.string(),
+  season: z.number(),
+  status: z.string(),
+  postseason: z.boolean(),
+  home_team: teamSchema,
+  visitor_team: teamSchema,
+  home_team_score: z.number(),
+  visitor_team_score: z.number(),
+});
+export type Game = z.infer<typeof gameSchema>;
+
+/** The `/games` list response: a data array plus cursor pagination meta. */
+export const gamesResponseSchema = z.object({
+  data: z.array(gameSchema),
+  meta: metaSchema,
+});
+export type GamesResponse = z.infer<typeof gamesResponseSchema>;

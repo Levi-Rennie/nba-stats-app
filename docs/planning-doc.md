@@ -129,7 +129,10 @@ const API_KEY = import.meta.env.VITE_BDL_API_KEY;
 - Reuse the profile components from browse. (Stats compare = paid-tier stretch.)
 
 ### Phase 4 — Teams + favourites (days 9–11)
-- Team list; derive a W–L standings table by aggregating the free `/games` endpoint.
+- Team list, grouped by conference/division (free `/teams`). **Done.**
+- ~~Derive a W–L standings table from `/games`~~ **Not viable on the free tier**
+  (5 req/min vs. ~13 pages per season) — dropped to stretch. Built a **Recent
+  Games** view (free `/games`, one request) instead.
 - Favourites via Context, persisted to `localStorage`.
 
 ### Phase 5 — Polish (days 12–14)
@@ -159,6 +162,8 @@ const API_KEY = import.meta.env.VITE_BDL_API_KEY;
 
 - **Stats compare / season averages** — requires a paid tier (`/stats` +
   `/season_averages`); unlocks a true head-to-head stat line.
+- **Standings** — needs the paid tier's `/standings` (deriving from `/games` is
+  infeasible at 5 req/min), or a backend that pre-aggregates game results.
 - Player stat charts (e.g. Recharts) over a season.
 - Compare more than two players.
 - Filter players by team/position.
