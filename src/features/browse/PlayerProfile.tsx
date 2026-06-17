@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import type { Player } from "../../api/schemas";
 import { PLAYER_ATTRIBUTES } from "../../components/playerAttributes";
+import { useFavourites } from "../favourites/FavouritesContext";
 
 interface PlayerProfileProps {
   player: Player;
@@ -8,6 +9,9 @@ interface PlayerProfileProps {
 }
 
 export function PlayerProfile({ player, onBack }: PlayerProfileProps) {
+  const { isFavourite, toggle } = useFavourites();
+  const favourited = isFavourite(player.id);
+
   return (
     <div>
       <button type="button" onClick={onBack}>
@@ -17,6 +21,14 @@ export function PlayerProfile({ player, onBack }: PlayerProfileProps) {
       <h2>
         {player.first_name} {player.last_name}
       </h2>
+
+      <button
+        type="button"
+        onClick={() => toggle(player)}
+        aria-pressed={favourited}
+      >
+        {favourited ? "★ Favourited" : "☆ Add to favourites"}
+      </button>
 
       <dl>
         {PLAYER_ATTRIBUTES.map((attr) => (

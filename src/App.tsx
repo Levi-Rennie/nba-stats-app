@@ -4,14 +4,16 @@ import { BrowsePage } from './features/browse/BrowsePage'
 import { ComparePage } from './features/compare/ComparePage'
 import { TeamsPage } from './features/teams/TeamsPage'
 import { RecentGamesPage } from './features/games/RecentGamesPage'
+import { FavouritesPage } from './features/favourites/FavouritesPage'
 
-type View = 'browse' | 'compare' | 'teams' | 'games'
+type View = 'browse' | 'compare' | 'teams' | 'games' | 'favourites'
 
 const TABS: { id: View; label: string }[] = [
   { id: 'browse', label: 'Browse' },
   { id: 'compare', label: 'Compare' },
   { id: 'teams', label: 'Teams' },
   { id: 'games', label: 'Recent Games' },
+  { id: 'favourites', label: 'Favourites' },
 ]
 
 function App() {
@@ -47,6 +49,7 @@ function App() {
       <div hidden={view !== 'compare'}>{mounted.has('compare') && <ComparePage />}</div>
       <div hidden={view !== 'teams'}>{mounted.has('teams') && <TeamsPage />}</div>
       <div hidden={view !== 'games'}>{mounted.has('games') && <RecentGamesPage />}</div>
+      <div hidden={view !== 'favourites'}>{mounted.has('favourites') && <FavouritesPage />}</div>
     </main>
   )
 }
