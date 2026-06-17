@@ -44,9 +44,9 @@ showcase of front-end skills.
 
 | Feature | Description |
 |---------|-------------|
-| Browse player stats | Search for a player, view their profile and season averages. |
-| Compare players head-to-head | Pick two players, see key stats side by side. |
-| Team stats / standings | View team info and standings *(see API note — may be a paid endpoint)*. |
+| Browse players | Search for a player, view their profile (bio/measurables — see free-tier note). |
+| Compare players head-to-head | Pick two players, compare bio/measurables side by side (stats are paywalled — see note). |
+| Teams + derived standings | View team info; derive a W–L standings table from the free `/games` endpoint. |
 | Search + favourites | Search players/teams; mark favourites to revisit quickly. |
 
 ## 6. Out of scope (v1)
@@ -71,10 +71,32 @@ showcase of front-end skills.
   fallback (e.g. derive a simple standings view from team/game data, or drop it
   to "stretch").
 
+### Free-tier findings (probed 2026-06-17) — DECISION: build on the free tier (Plan B)
+
+Probed the live API with our key. The free tier is narrower than assumed — the
+paywall hits **player stats**, not just standings:
+
+| Endpoint | Free? | Notes |
+|----------|-------|-------|
+| `/players`, `/players/:id` | ✅ | Bio only: name, position, height, weight, jersey, college, country, draft info, team. |
+| `/teams` | ✅ | Conference, division, city, name, abbreviation. |
+| `/games` | ✅ | **Team-level** final scores (per quarter), date, season, postseason flag. No player stats. |
+| `/stats` | ❌ 401 | Per-game player box scores — paywalled. |
+| `/season_averages` | ❌ 401 | Player averages — paywalled. |
+| `/standings` | ❌ 401 | Paywalled. |
+
+Consequences for v1 (Plan B — stay free):
+- **No free source of player performance stats** (`/stats` and `/season_averages`
+  are both gated). Player profile and compare are therefore **bio/measurables
+  only**, not stat lines. A full stats compare is parked as a paid-tier stretch.
+- **Standings is buildable for free** by aggregating `/games` results into W–L
+  records per team — this becomes a real feature, not a fallback.
+
 ## 8. Success criteria
 
 - App runs locally with `npm run dev` and builds clean (`tsc` passes, no `any`).
-- A user can search a player and see real stats from the API.
+- A user can search a player and see their real profile from the API
+  (bio/measurables on the free tier).
 - Two players can be compared side by side.
 - Loading and error states are handled (no blank screens on a failed request).
 - Code is typed end-to-end, with API responses validated via Zod.
@@ -82,7 +104,10 @@ showcase of front-end skills.
 ## 9. Open questions
 
 - Which season(s) to default to? (Current vs. let the user pick.)
-- Does the free tier return standings? (Decides feature 3's fate.)
+- ~~Does the free tier return standings?~~ **Resolved (2026-06-17):** no — `/standings`
+  is paywalled, but standings can be derived from the free `/games` endpoint.
+  Player stats (`/stats`, `/season_averages`) are also paywalled; v1 goes
+  bio-only on profiles/compare (Plan B).
 - Where do favourites persist? (In-memory for the session, or `localStorage`?)
 - How to handle the API key in a frontend-only app? (It will be visible in
   network requests — fine for a learning project, but worth noting. See

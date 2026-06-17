@@ -102,24 +102,31 @@ const API_KEY = import.meta.env.VITE_BDL_API_KEY;
 
 ## 5. Milestones (1–2 weeks)
 
+> **Free-tier reality (probed 2026-06-17 → Plan B):** `/stats`, `/season_averages`,
+> and `/standings` are all paywalled. Free endpoints are `/players`, `/teams`,
+> and `/games`. v1 stays on the free tier: profiles/compare are bio/measurables
+> only, and standings is derived from `/games`. See discovery doc §7.
+
 ### Phase 1 — Setup & first fetch (days 1–2)
-- Scaffold Vite + React + TS, strict mode on.
-- Get a BALLDONTLIE key, confirm what the free tier returns (esp. standings).
+- Scaffold Vite + React + TS, strict mode on. *(Note: `tsconfig.app.json` was
+  missing `"strict": true` — add it before writing `client.ts`. Also pin `zod`
+  in `package.json`.)*
+- ~~Confirm what the free tier returns~~ **Done** — see free-tier reality above.
 - Build `client.ts` with the auth header + a basic error path.
 - Fetch and `console.log` a list of players. **Goal: real data on screen.**
 
 ### Phase 2 — Browse + search (days 3–5)
 - Search bar with debounced input → players endpoint.
-- Player profile / season averages view.
+- Player profile view (bio/measurables — no stats on the free tier).
 - Zod schemas for everything touched so far; no `any`.
 - Loading + error UI.
 
 ### Phase 3 — Compare (days 6–8)
-- Select two players, render key stats side by side.
-- Reuse the stat components from browse.
+- Select two players, render bio/measurables side by side.
+- Reuse the profile components from browse. (Stats compare = paid-tier stretch.)
 
 ### Phase 4 — Teams + favourites (days 9–11)
-- Team list and standings (or fallback if standings is paywalled).
+- Team list; derive a W–L standings table by aggregating the free `/games` endpoint.
 - Favourites via Context, persisted to `localStorage`.
 
 ### Phase 5 — Polish (days 12–14)
@@ -140,13 +147,15 @@ const API_KEY = import.meta.env.VITE_BDL_API_KEY;
 
 | Risk | Mitigation |
 |------|------------|
-| Standings/advanced stats are paywalled | Confirm in Phase 1; have a fallback or drop to stretch. |
+| Standings/advanced stats are paywalled | **Confirmed paywalled (2026-06-17).** Standings derived from free `/games`; player stats dropped to paid-tier stretch (Plan B). |
 | Rate limits hit during dev | Cache responses (TanStack Query or a simple in-memory map); don't refetch on every keystroke (debounce). |
 | API shape differs from assumptions | Zod `safeParse` catches it early and loudly. |
 | Scope creep | Stick to the four core features; park extras in "out of scope". |
 
 ## 8. Stretch goals (only if time)
 
+- **Stats compare / season averages** — requires a paid tier (`/stats` +
+  `/season_averages`); unlocks a true head-to-head stat line.
 - Player stat charts (e.g. Recharts) over a season.
 - Compare more than two players.
 - Filter players by team/position.
